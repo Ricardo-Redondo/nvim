@@ -78,11 +78,12 @@ These are the shortcuts this config adds.
 | Key | Action |
 | --- | --- |
 | `Ctrl+S` | Save (also leaves insert mode) |
-| `Ctrl+P` | Find files |
-| `Ctrl+Shift+F` | Search in project (use `<Space>fw` if your terminal doesn't pass it through) |
-| `Ctrl+B` | Toggle the sidebar |
-| `Ctrl+H` in the sidebar | Show or hide hidden files |
+| `<Space>ff` | Find files |
 | `<Space>fG` | Find files anywhere in your home folder |
+| `<Space>fF` | Find files, including hidden (. files) and ignored files |
+| `Ctrl+Shift+F` | Search in project (use `<Space>fw` if your terminal doesn't pass it through) |
+| `<Space>e` | Toggle the sidebar |
+| `Ctrl+H` in the sidebar | Show or hide hidden files |
 | `-` or `<Space>O` | Open Oil on the current folder (`q` closes it) |
 | `<Space>n` | New file, asks for a name first and creates missing folders (`Tab` twice completes a path) |
 
@@ -94,6 +95,7 @@ In the file finder, type a path to search outside the project: `~/notes/todo` lo
 | Key | Action |
 | --- | --- |
 | `Shift+L` / `Shift+H` | Next / previous buffer |
+| `[b` / `]b` | Same action |
 
 ### Editing
 
@@ -132,6 +134,9 @@ In the file finder, type a path to search outside the project: `~/notes/todo` lo
 | `<Space>uP` | Toggle flake8 and mypy until restart |
 | `<Space>Ps` / `<Space>Pc` | Start / stop the live preview |
 | `<Space>Pp` | Pick a file to preview |
+| `F7` | Toggle the terminal |
+| `<Space>th` / `<Space>tv` | Terminal below / on the side |
+| `<Space>tf` | Floating terminal |
 
 ### Terminal
 
@@ -144,8 +149,8 @@ In the file finder, type a path to search outside the project: `~/notes/todo` lo
 
 | Key | Action |
 | --- | --- |
-| `<Space>ff` / `<Space>fw` | Find files / search text |
-| `<Space>fF` | Find files, including hidden and gitignored ones |
+| `<Space>fw` | search text |
+| `<Space>fF` | including hidden and gitignored ones |
 | `<Space>fb` / `<Space>fo` | Open buffers / recent files |
 | `<Space>bb` | Pick a buffer by letter |
 | `<Space>c` / `<Space>bc` | Close the buffer / all the others |
@@ -157,9 +162,6 @@ In the file finder, type a path to search outside the project: `~/notes/todo` lo
 | `]g` / `[g` | Next / previous git change |
 | `<Space>gs` / `<Space>gS` | Stage the change / whole file |
 | `<Space>db` / `<Space>dc` | Set a breakpoint / start debugging |
-| `F7` | Toggle the terminal |
-| `<Space>th` / `<Space>tv` | Terminal below / on the side |
-| `<Space>tf` | Floating terminal |
 
 ## How it behaves
 
