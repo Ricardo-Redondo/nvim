@@ -46,6 +46,15 @@ return {
     },
   },
 
+  -- Autopairs: AstroNvim only enables it in listed buffers, but neo-tree lists a file after
+  -- opening it, which left autopairs off in files opened from the sidebar
+  {
+    "windwp/nvim-autopairs",
+    opts = {
+      enabled = function(bufnr) return vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buftype == "" end,
+    },
+  },
+
   -- Git signs: show inline blame like GitLens
   {
     "lewis6991/gitsigns.nvim",
