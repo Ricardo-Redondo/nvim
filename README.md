@@ -125,6 +125,15 @@ These are the shortcuts this config adds.
 | `<Space>lf` | Format the file |
 | `<Space>r` | Compile and run the current C/C++ file |
 | `<Space>uP` | Toggle flake8 and mypy until restart |
+| `<Space>Ps` / `<Space>Pc` | Start / stop the live preview |
+| `<Space>Pp` | Pick a file to preview |
+
+### Terminal
+
+| Command | Action |
+| --- | --- |
+| `:tsplit` | Open a terminal below, ready to type |
+| `:tvsplit` | Open a terminal on the side, ready to type |
 
 ### Useful AstroNvim defaults
 
@@ -142,7 +151,9 @@ These are the shortcuts this config adds.
 | `]g` / `[g` | Next / previous git change |
 | `<Space>gs` / `<Space>gS` | Stage the change / whole file |
 | `<Space>db` / `<Space>dc` | Set a breakpoint / start debugging |
-| `F7` | Terminal |
+| `F7` | Toggle the terminal |
+| `<Space>th` / `<Space>tv` | Terminal below / on the side |
+| `<Space>tf` | Floating terminal |
 
 ## How it behaves
 
@@ -155,6 +166,27 @@ These are the shortcuts this config adds.
   `Ctrl+Space` still opens them.
 - **The mouse is off** so a touchpad can't move the cursor. `:set mouse=a` turns it on until restart.
 - **Arrow keys** wrap across lines.
+
+## Live preview
+
+Like VSCode's Live Server, for HTML, Markdown, AsciiDoc and SVG. Press `<Space>Ps` in a supported
+file and it opens in your browser at `http://127.0.0.1:5500`.
+
+- **HTML** reloads when you save, along with its CSS and JavaScript.
+- **Markdown, AsciiDoc and SVG** update as you type.
+
+## Discord
+
+Your Discord status shows the current file and folder, like `Editing main.c` and `In my-project`.
+It connects by itself when Discord is open, and does nothing otherwise.
+
+- `:Cord toggle` hides or shows it. `:Cord disable` and `:Cord enable` do one or the other.
+- `:Cord status` shows whether it's connected to Discord.
+- `:Cord reconnect` reconnects to Discord, and `:Cord restart` restarts the plugin if the status gets stuck.
+- `:Cord shutdown` stops its background server.
+- There are no keybinds for it, only these commands.
+- Vesktop needs Rich Presence turned on in its settings.
+- To remove it, delete the `cord-nvim` line from `lua/community.lua`.
 
 ## Project setup
 

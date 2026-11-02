@@ -41,6 +41,10 @@ return {
   { import = "astrocommunity.scrolling.satellite-nvim" }, -- scrollbar with git/diagnostic marks
   { import = "astrocommunity.lsp.nvim-lsp-file-operations" }, -- update imports when renaming files
 
+  -- == Live preview and Discord ==
+  { import = "astrocommunity.utility.live-preview" }, -- like VSCode's Live Server, for HTML and Markdown
+  { import = "astrocommunity.media.cord-nvim" }, -- Discord rich presence
+
   -- == AI inline suggestions (GitHub Copilot ghost text) ==
   -- Uncomment if you have Copilot access (needs nodejs), then run :Copilot auth
   -- { import = "astrocommunity.completion.copilot-lua-cmp" },

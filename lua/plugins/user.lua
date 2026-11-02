@@ -55,6 +55,18 @@ return {
     },
   },
 
+  -- Discord rich presence: plain Neovim branding, and no buttons as the default one
+  -- publishes the git remote URL. Discord drops updates when rate limited instead of
+  -- queueing them, so sync resends the current one to stop the status getting stuck
+  {
+    "vyfor/cord.nvim",
+    opts = function(_, opts)
+      opts.editor = { client = "neovim", tooltip = "Neovim" }
+      opts.buttons = nil
+      opts.advanced = { discord = { sync = { enabled = true, mode = "periodic", interval = 12000, pad = true } } }
+    end,
+  },
+
   -- Git signs: show inline blame like GitLens
   {
     "lewis6991/gitsigns.nvim",
