@@ -3,6 +3,13 @@
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
 --       as this provides autocomplete and documentation while editing
 
+-- python inside the closest `.venv` (created by `uv`), searching up from the project root
+local function venv_python(root)
+  local venv = vim.fs.find(".venv", { path = root, upward = true, type = "directory" })[1]
+  local python = venv and venv .. "/bin/python"
+  if python and vim.uv.fs_stat(python) then return python end
+end
+
 ---@type LazySpec
 return {
   "AstroNvim/astrolsp",
@@ -43,18 +50,35 @@ return {
     -- client specific configuration can also go in `lsp/` in your configuration root (see `:h lsp-config`)
     config = {
       -- ["*"] = { capabilities = {} }, -- modify default LSP client settings such as capabilities
+      -- mypy and flake8 report errors (<Leader>uP), ty only does completion and navigation
+      ty = {
+        -- ty only finds `.venv` in the project root, this also covers one further up the repo
+        before_init = function(_, c)
+          local python = venv_python(c.root_dir)
+          if python then c.settings.ty.configuration = { environment = { python = python } } end
+        end,
+        settings = { ty = { diagnosticMode = "off" } },
+      },
       basedpyright = {
+        -- the default 2GB limit crashes the server in projects using large libraries like transformers
+        cmd_env = { NODE_OPTIONS = "--max-old-space-size=4096" },
         -- use the project's `.venv` (created by `uv`) automatically, falling back to python on PATH
         before_init = function(_, c)
           c.settings = c.settings or {}
           c.settings.python = c.settings.python or {}
-          local venv = vim.fs.find(".venv", { path = c.root_dir, upward = true, type = "directory" })[1]
-          local python = venv and venv .. "/bin/python"
-          if not (python and vim.uv.fs_stat(python)) then python = vim.fn.exepath "python" end
-          c.settings.python.pythonPath = python
+          c.settings.python.pythonPath = venv_python(c.root_dir) or vim.fn.exepath "python"
         end,
         -- mypy does the type checking (see lua/plugins/python.lua); keep basedpyright for completion/navigation
-        settings = { basedpyright = { analysis = { typeCheckingMode = "off" } } },
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = "off",
+              -- skip scanning these in advance, a large corpus in data/ ran the server out of memory.
+              -- Their files can still be imported. The first three are basedpyright's own defaults
+              exclude = { "**/node_modules", "**/__pycache__", "**/.*", "**/data" },
+            },
+          },
+        },
       },
     },
     -- customize how language servers are attached
@@ -64,9 +88,10 @@ return {
 
       -- the key is the server that is being setup with `vim.lsp.config`
       -- rust_analyzer = false, -- setting a handler to false will disable the set up of that language server
-      -- basedpyright already handles python types/imports; these duplicate every diagnostic
+      -- ty is the python server: about 10x faster than basedpyright in projects using large
+      -- libraries. To go back, swap this line for `ty = false` and basedpyright takes over again
+      basedpyright = false,
       pyrefly = false,
-      ty = false,
     },
     -- Configure buffer local auto commands to add when attaching a language server
     autocmds = {

@@ -43,6 +43,10 @@ return {
         ["<C-p>"] = { function() require("snacks").picker.files() end, desc = "Find files" },
         ["<C-S-f>"] = { function() require("snacks").picker.grep() end, desc = "Search in project" },
         ["<C-b>"] = { "<Cmd>Neotree toggle<CR>", desc = "Toggle sidebar explorer" },
+        ["<Leader>fG"] = {
+          function() require("snacks").picker.files { cwd = vim.env.HOME, hidden = true, title = "Global files" } end,
+          desc = "Find files globally",
+        },
         ["-"] = { "<Cmd>Oil<CR>", desc = "Open parent directory (Oil)" },
         -- the line() checks stop these at the buffer edges, where `:m` errors with E16
         ["<A-j>"] = { "<Cmd>if line('.') < line('$') | m .+1 | exe 'normal! ==' | endif<CR>", desc = "Move line down" },

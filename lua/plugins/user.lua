@@ -15,6 +15,24 @@ local function in_plain_string()
   return false
 end
 
+-- lets the file picker search anywhere: `~/dir/name` or `/dir/name` searches for `name` in that
+-- folder instead of the project, and clearing it goes back to the project
+local function search_typed_path(picker, filter)
+  picker.project_cwd = picker.project_cwd or picker:cwd()
+  local dir, rest = filter.pattern:match "^(~?/.-)([^/]*)$"
+  dir = dir and vim.fs.normalize(dir)
+  if dir and vim.fn.isdirectory(dir) == 1 then
+    filter.pattern = rest
+  else
+    dir = picker.project_cwd
+  end
+  if dir ~= picker:cwd() then
+    picker:set_cwd(dir)
+    filter:set_cwd(dir)
+    return true
+  end
+end
+
 ---@type LazySpec
 return {
   -- Oil: edit the filesystem like a buffer (open with `-` or <Leader>O)
@@ -35,7 +53,10 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
-      filesystem = { hijack_netrw_behavior = "disabled" },
+      filesystem = {
+        hijack_netrw_behavior = "disabled",
+        window = { mappings = { ["<C-h>"] = "toggle_hidden" } },
+      },
       event_handlers = {
         -- close the sidebar after opening a file from it
         {
@@ -100,6 +121,24 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
+      picker = {
+        sources = {
+          files = { filter = { transform = search_typed_path } },
+        },
+      },
+      styles = {
+        input = {
+          -- floating prompts can't be focused again once you leave them, so close them instead of
+          -- leaving them stuck. Not the cancel action, as that moves the cursor back to where it was
+          on_win = function(win)
+            win:on("WinLeave", function()
+              vim.schedule(function()
+                if win:valid() then win:close() end
+              end)
+            end, { buf = true })
+          end,
+        },
+      },
       dashboard = {
         preset = {
           header = table.concat({

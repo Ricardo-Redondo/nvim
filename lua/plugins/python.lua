@@ -32,7 +32,7 @@ return {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = function(_, opts)
       opts.ensure_installed =
-        require("astrocore").list_insert_unique(opts.ensure_installed, { "flake8", "mypy", "black", "isort" })
+        require("astrocore").list_insert_unique(opts.ensure_installed, { "ty", "flake8", "mypy", "black", "isort" })
     end,
   },
 

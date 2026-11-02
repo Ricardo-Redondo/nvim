@@ -81,8 +81,13 @@ These are the shortcuts this config adds.
 | `Ctrl+P` | Find files |
 | `Ctrl+Shift+F` | Search in project (use `<Space>fw` if your terminal doesn't pass it through) |
 | `Ctrl+B` | Toggle the sidebar |
+| `Ctrl+H` in the sidebar | Show or hide hidden files |
+| `<Space>fG` | Find files anywhere in your home folder |
 | `-` or `<Space>O` | Open Oil on the current folder (`q` closes it) |
-| `<Space>n` | New file, asks for a name first and creates missing folders |
+| `<Space>n` | New file, asks for a name first and creates missing folders (`Tab` twice completes a path) |
+
+In the file finder, type a path to search outside the project: `~/notes/todo` looks for `todo` in
+`~/notes`, and `/etc/host` looks for `host` in `/etc`. Delete it to go back to the project.
 
 ### Buffers
 
@@ -140,6 +145,7 @@ These are the shortcuts this config adds.
 | Key | Action |
 | --- | --- |
 | `<Space>ff` / `<Space>fw` | Find files / search text |
+| `<Space>fF` | Find files, including hidden and gitignored ones |
 | `<Space>fb` / `<Space>fo` | Open buffers / recent files |
 | `<Space>bb` | Pick a buffer by letter |
 | `<Space>c` / `<Space>bc` | Close the buffer / all the others |
@@ -159,13 +165,16 @@ These are the shortcuts this config adds.
 
 - **Formatting is manual.** Nothing formats on save. Press `<Space>lf`.
 - **Python** formats with isort and black at 79 columns. flake8 and mypy are off until `<Space>uP`.
-  basedpyright does completion and navigation, not type checking.
+- **ty** is the Python language server. It only does suggestions and navigation, so nothing reports
+  errors, including missing imports, until you turn on flake8 and mypy.
 - **C and C++** use 4 spaces and `clang-format`. A project's `.clang-format` takes priority.
 - **`.h` files** count as C unless they contain C++ such as `class` or `std::`.
 - **Suggestions** stay hidden inside strings, except inside f-string braces.
   `Ctrl+Space` still opens them.
 - **The mouse is off** so a touchpad can't move the cursor. `:set mouse=a` turns it on until restart.
 - **Arrow keys** wrap across lines.
+- **The sidebar** closes when you open a file from it.
+- **Prompts** like rename close if you move to another window, which counts as cancelling.
 
 ## Live preview
 
@@ -174,11 +183,20 @@ file and it opens in your browser at `http://127.0.0.1:5500`.
 
 - **HTML** reloads when you save, along with its CSS and JavaScript.
 - **Markdown, AsciiDoc and SVG** update as you type.
+- **New files** need saving once first, or the browser shows a 404.
+
+Only one preview can use port 5500. A second Neovim in another project gets a 404, so give it a
+different port before pressing `<Space>Ps`:
+
+```vim
+:lua require("livepreview.config").set({ port = 5501 })
+```
 
 ## Discord
 
 Your Discord status shows the current file and folder, like `Editing main.c` and `In my-project`.
-It connects by itself when Discord is open, and does nothing otherwise.
+It connects by itself when Discord is open, and does nothing otherwise. Changes can take up to
+about 12 seconds to appear, because Discord limits how often a status can update.
 
 - `:Cord toggle` hides or shows it. `:Cord disable` and `:Cord enable` do one or the other.
 - `:Cord status` shows whether it's connected to Discord.
@@ -204,6 +222,10 @@ Then run `:lsp restart`.
 
 Projects made with `uv init` work with no setup: `.venv` is found from any subfolder. After
 `uv add`, run `:lsp restart`.
+
+To use basedpyright instead of ty, change `basedpyright = false,` to `ty = false,` in
+`lua/plugins/astrolsp.lua`. It's slower in projects using large libraries like `transformers`, but
+it warns about missing imports. It's already set up to skip `data/` folders, with a 4 GB memory limit.
 
 ## Language packs
 
@@ -247,6 +269,7 @@ They're all optional, and most of the 1.6 GB download comes from them, so remove
 | `lua/plugins/user.lua` | Plugin tweaks |
 | `lua/plugins/python.lua` | Python linters and formatters |
 | `lua/plugins/c.lua` | C and C++ indentation and formatters |
+| `lua/polish.lua` | Small autocommands, like refreshing suggestions once a language server is ready |
 
 Any other file you add to `lua/plugins/` is loaded automatically, and the folders listed in
 `.gitignore` stay out of the repo. That's useful for personal or machine-specific settings.
