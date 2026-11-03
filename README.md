@@ -8,7 +8,7 @@ LSP, git tools, the [Oil](https://github.com/stevearc/oil.nvim) file manager and
 Tested on CachyOS. The Debian, Ubuntu, Fedora, macOS and Nix steps haven't been tried on real
 machines yet, so please report anything that goes wrong.
 
-The script installs the system packages, this config and all plugins. It's safe
+The script installs the system packages, the latest release of this config and all plugins. It's safe
 to run again, and an existing config from somewhere else is moved to `nvim.bak-<date>`, not deleted.
 
 ### Linux (Arch, CachyOS, Debian, Ubuntu, Fedora)
@@ -65,7 +65,13 @@ curl -fsSL https://raw.githubusercontent.com/Ricardo-Redondo/nvim/main/install.s
 Press `p` on the start screen, or `<Space>ps` anywhere, to open the plugin screen. From there, `U`
 updates, `S` syncs, `I` installs missing plugins and `q` closes it.
 
-Update this config by running the install command again, or `git pull` in `~/.config/nvim`.
+Update this config by running the install command again, which moves you to the latest release.
+
+To install a specific version, or `main` for the newest code, change `bash` at the end to:
+
+```sh
+NVIM_VERSION=v0.1.0 bash
+```
 
 Uninstall:
 

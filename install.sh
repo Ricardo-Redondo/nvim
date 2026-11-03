@@ -3,12 +3,13 @@
 #
 #   curl -fsSL https://raw.githubusercontent.com/Ricardo-Redondo/nvim/main/install.sh | bash
 #
-# Safe to run again: it updates the config instead of reinstalling it.
+# Installs the latest release. Safe to run again: it updates the config instead of reinstalling it.
 # An existing config that came from somewhere else is moved to nvim.bak-<date>, not deleted.
 #
 #   NVIM_SKIP_PACKAGES=1   skip system packages (no sudo, e.g. a school machine)
 #   NVIM_USE_NIX=1         install packages with Nix (automatic on NixOS)
 #   NVIM_REPO=<url>        clone from a different repo
+#   NVIM_VERSION=<name>    install a specific release like v0.1.0, or main for the newest code
 set -euo pipefail
 
 REPO="${NVIM_REPO:-https://github.com/Ricardo-Redondo/nvim.git}"
@@ -102,6 +103,18 @@ repo_id() {
   printf '%s\n' "$1" | sed -E 's#\.git$##; s#/$##; s#^.*[:/]([^/:]+/[^/:]+)$#\1#'
 }
 
+# checks out NVIM_VERSION, or the newest release tag if it isn't set
+use_version() {
+  local dir="$1"
+  local version="${NVIM_VERSION:-}"
+  if [ -z "$version" ]; then version="$(git -C "$dir" tag --list 'v*' --sort=-v:refname | sed -n 1p)"; fi
+  if [ -z "$version" ]; then return; fi # no releases yet, stay on the default branch
+
+  info "Using version $version"
+  git -C "$dir" checkout -q "$version" || return 1
+  if git -C "$dir" symbolic-ref -q HEAD >/dev/null; then git -C "$dir" pull -q --ff-only; fi
+}
+
 install_config() {
   mkdir -p "$(dirname "$CONFIG")"
 
@@ -110,7 +123,13 @@ install_config() {
     info "Updating config in $CONFIG"
     # lazy.nvim rewrites this file on every machine, a local copy would block the pull
     git -C "$CONFIG" checkout -- lazy-lock.json 2>/dev/null || true
-    git -C "$CONFIG" pull --ff-only || warn "couldn't update, keeping your local copy as it is"
+    # a checkout on a branch is someone working on the config, so don't move it to a release
+    if [ -z "${NVIM_VERSION:-}" ] && git -C "$CONFIG" symbolic-ref -q HEAD >/dev/null; then
+      git -C "$CONFIG" pull --ff-only || warn "couldn't update, keeping your local copy as it is"
+    else
+      git -C "$CONFIG" fetch -q --tags || warn "couldn't check for updates"
+      use_version "$CONFIG" || warn "couldn't switch version, keeping your local copy as it is"
+    fi
     return
   fi
 
@@ -120,6 +139,10 @@ install_config() {
   git clone "$REPO" "$new" || {
     rm -rf "$new"
     die "couldn't clone $REPO"
+  }
+  use_version "$new" || {
+    rm -rf "$new"
+    die "couldn't find version $NVIM_VERSION"
   }
 
   if [ -e "$CONFIG" ]; then
