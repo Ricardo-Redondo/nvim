@@ -78,9 +78,11 @@ return {
 
   -- Discord rich presence: plain Neovim branding, and no buttons as the default one
   -- publishes the git remote URL. Discord drops updates when rate limited instead of
-  -- queueing them, so sync resends the current one to stop the status getting stuck
+  -- queueing them, so sync resends the current one to stop the status getting stuck.
+  -- Off unless vim.g.discord_presence is set, as it shows file names to Discord friends
   {
     "vyfor/cord.nvim",
+    enabled = function() return vim.g.discord_presence == true end,
     opts = function(_, opts)
       opts.editor = { client = "neovim", tooltip = "Neovim" }
       opts.buttons = nil
@@ -115,6 +117,18 @@ return {
       },
       signature = { enabled = true },
     },
+  },
+
+  -- Dashboard: add a plugin manager and quit button after the AstroNvim ones
+  {
+    "folke/snacks.nvim",
+    opts = function(_, opts)
+      local get_icon = require("astroui").get_icon
+      vim.list_extend(opts.dashboard.preset.keys, {
+        { key = "p", action = ":Lazy", icon = get_icon("Package", 0, true), desc = "Plugins  " },
+        { key = "q", action = ":qa", icon = "󰈆", desc = "Quit  " },
+      })
+    end,
   },
 
   -- Snacks: dashboard header + extras

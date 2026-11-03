@@ -5,6 +5,9 @@ LSP, git tools, the [Oil](https://github.com/stevearc/oil.nvim) file manager and
 
 ## Install
 
+Tested on CachyOS. The Debian, Ubuntu, Fedora, macOS and Nix steps haven't been tried on real
+machines yet, so please report anything that goes wrong.
+
 The script installs the system packages, this config and all plugins. It's safe
 to run again, and an existing config from somewhere else is moved to `nvim.bak-<date>`, not deleted.
 
@@ -59,7 +62,10 @@ curl -fsSL https://raw.githubusercontent.com/Ricardo-Redondo/nvim/main/install.s
 
 ## Update and uninstall
 
-Update by running the install command again, or `git pull` in `~/.config/nvim`.
+Press `p` on the start screen, or `<Space>ps` anywhere, to open the plugin screen. From there, `U`
+updates, `S` syncs, `I` installs missing plugins and `q` closes it.
+
+Update this config by running the install command again, or `git pull` in `~/.config/nvim`.
 
 Uninstall:
 
@@ -196,7 +202,17 @@ different port before pressing `<Space>Ps`:
 
 ## Discord
 
-Your Discord status shows the current file and folder, like `Editing main.c` and `In my-project`.
+Discord rich presence is off by default, because it shows your friends the file and folder you're
+working in, like `Editing main.c` and `In my-project`.
+
+To turn it on, run this and restart `nvim`:
+
+```sh
+echo 'vim.g.discord_presence = true; return {}' > ~/.config/nvim/lua/plugins/discord.lua
+```
+
+Delete that file to turn it off again.
+
 It connects by itself when Discord is open, and does nothing otherwise. Changes can take up to
 about 12 seconds to appear, because Discord limits how often a status can update.
 
@@ -206,7 +222,6 @@ about 12 seconds to appear, because Discord limits how often a status can update
 - `:Cord shutdown` stops its background server.
 - There are no keybinds for it, only these commands.
 - Vesktop needs Rich Presence turned on in its settings.
-- To remove it, delete the `cord-nvim` line from `lua/community.lua`.
 
 ## Project setup
 
