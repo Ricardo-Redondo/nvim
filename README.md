@@ -252,8 +252,8 @@ Then run `:lsp restart`.
 Projects made with `uv init` work with no setup: `.venv` is found from any subfolder. After
 `uv add`, run `:lsp restart`.
 
-To use basedpyright instead of ty, change `basedpyright = false,` to `ty = false,` in
-`lua/plugins/astrolsp.lua`. It's slower in projects using large libraries like `transformers`, but
+To use basedpyright instead of ty, run `:MasonInstall basedpyright`, then change
+`basedpyright = false,` to `ty = false,` in `lua/plugins/astrolsp.lua`. It's slower in projects using large libraries like `transformers`, but
 it warns about missing imports. It's already set up to skip `data/` folders, with a 4 GB memory limit.
 
 ## Language packs
