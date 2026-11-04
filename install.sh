@@ -10,10 +10,12 @@
 #   NVIM_USE_NIX=1         install packages with Nix (automatic on NixOS)
 #   NVIM_REPO=<url>        clone from a different repo
 #   NVIM_VERSION=<name>    install a specific release like v0.1.0, or main for the newest code
+#   NVIM_BIN=<path>        use this Neovim binary instead of an installed one, e.g. a downloaded release
 set -euo pipefail
 
 REPO="${NVIM_REPO:-https://github.com/Ricardo-Redondo/nvim.git}"
 CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/nvim"
+NVIM="nvim" # replaced by NVIM_BIN in find_nvim
 
 PACMAN_PACKAGES=(neovim git curl ripgrep fd gcc make unzip python nodejs npm clang gdb cmake bear)
 APT_PACKAGES=(neovim git curl ripgrep fd-find build-essential unzip python3 python3-venv nodejs npm clang clangd clang-format gdb cmake bear)
@@ -155,32 +157,60 @@ install_config() {
 }
 
 install_plugins() {
-  if ! nvim --headless -c 'if !has("nvim-0.11") | cquit | endif' -c 'qa' >/dev/null 2>&1; then
-    warn "this Neovim is too old (needs 0.11+, built on 0.12): $(nvim --version | head -1)"
+  if ! "$NVIM" --headless -c 'if !has("nvim-0.11") | cquit | endif' -c 'qa' >/dev/null 2>&1; then
+    warn "this Neovim is too old (needs 0.11+, built on 0.12): $("$NVIM" --version | head -1)"
     warn "skipping plugins. Install a newer Neovim, then open nvim and they will install themselves"
     return
   fi
 
   # restore keeps every plugin on the version pinned in lazy-lock.json
   info "Installing plugins"
-  nvim --headless "+Lazy! restore" +qa
+  "$NVIM" --headless "+Lazy! restore" +qa
   printf '\n'
 }
 
 report_missing() {
   local missing=()
   local tool
-  for tool in nvim git rg gcc python3 node npm clang-format cmake bear; do
+  for tool in git rg gcc python3 node npm clang-format cmake bear; do
     command -v "$tool" >/dev/null || missing+=("$tool")
   done
   if [ "${#missing[@]}" -gt 0 ]; then warn "still missing: ${missing[*]}"; fi
+}
+
+# uses NVIM_BIN if given, and links it as ~/.local/bin/nvim so `nvim` works in a new shell
+find_nvim() {
+  if [ -z "${NVIM_BIN:-}" ]; then
+    command -v nvim >/dev/null ||
+      die "nvim isn't installed. Without sudo, download a release and pass it: NVIM_BIN=/path/to/bin/nvim"
+    return
+  fi
+
+  [ -f "$NVIM_BIN" ] && [ -x "$NVIM_BIN" ] || die "NVIM_BIN isn't an executable file: $NVIM_BIN"
+  NVIM="$(cd "$(dirname "$NVIM_BIN")" && pwd)/$(basename "$NVIM_BIN")"
+  "$NVIM" --version >/dev/null 2>&1 || die "couldn't run $NVIM"
+  info "Using $NVIM"
+
+  local link="$HOME/.local/bin/nvim"
+  if [ "$(readlink "$link" 2>/dev/null)" = "$NVIM" ]; then return; fi
+  if [ -e "$link" ] || [ -L "$link" ]; then
+    warn "$link already exists, not replacing it. Run $NVIM directly"
+    return
+  fi
+  mkdir -p "$HOME/.local/bin"
+  ln -s "$NVIM" "$link"
+  info "Linked it as $link"
+  case ":$PATH:" in
+    *":$HOME/.local/bin:"*) ;;
+    *) warn "add ~/.local/bin to your PATH to run it as nvim" ;;
+  esac
 }
 
 main() {
   install_packages
   command -v git >/dev/null || die "git isn't installed"
   command -v curl >/dev/null || die "curl isn't installed"
-  command -v nvim >/dev/null || die "nvim isn't installed"
+  find_nvim
 
   install_config
   install_plugins

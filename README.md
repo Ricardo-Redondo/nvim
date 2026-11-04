@@ -49,11 +49,17 @@ programs.nix-ld.enable = true;
 
 ### Without sudo
 
-Neovim, git and curl must already be installed:
+git and curl must already be installed. If Neovim isn't, download it from the
+[Neovim releases](https://github.com/neovim/neovim/releases), then pass the binary to the script:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/Ricardo-Redondo/nvim/main/install.sh | NVIM_SKIP_PACKAGES=1 bash
+curl -fsSL -o nvim.tar.gz https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+tar -xzf nvim.tar.gz
+curl -fsSL https://raw.githubusercontent.com/Ricardo-Redondo/nvim/main/install.sh | NVIM_SKIP_PACKAGES=1 NVIM_BIN=nvim-linux-x86_64/bin/nvim bash
 ```
+
+It's linked as `~/.local/bin/nvim`, so `nvim` works if `~/.local/bin` is on your `PATH`. Keep the
+`nvim-linux-x86_64` folder where it is, as the link points into it.
 
 ### After installing
 
