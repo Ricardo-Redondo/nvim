@@ -10,7 +10,8 @@ return {
       large_buf = { size = 1024 * 256, lines = 10000 },
       autopairs = true, -- auto close brackets/quotes
       cmp = true, -- autocompletion
-      diagnostics = { virtual_text = true, virtual_lines = false },
+      -- underlines and signs on start, but no messages at the end of lines; <Leader>uv shows them
+      diagnostics = { virtual_text = false, virtual_lines = false },
       highlighturl = true,
       notifications = true,
     },
@@ -34,6 +35,14 @@ return {
         undofile = true, -- persistent undo
         confirm = true,
         whichwrap = "b,s,<,>,[,]", -- arrow keys wrap across lines (normal and insert mode)
+        -- no status bar: the command line shows the mode (-- INSERT --) and position instead
+        laststatus = 0,
+        cmdheight = 1,
+        showmode = true,
+        ruler = true,
+        -- color the cursor from the theme (Cursor in colors/paper.lua) instead of the terminal's
+        -- own cursor color, which can match the background
+        guicursor = "n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor,t:block-blinkon500-blinkoff500-TermCursor",
       },
     },
     mappings = {

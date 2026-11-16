@@ -33,9 +33,7 @@ return {
   -- == VSCode-like editing ==
   { import = "astrocommunity.editing-support.vim-visual-multi" }, -- multi-cursor (<C-n> like Ctrl+D)
   { import = "astrocommunity.editing-support.nvim-treesitter-context" }, -- sticky scroll
-  { import = "astrocommunity.editing-support.rainbow-delimiters-nvim" }, -- bracket pair colorization
   { import = "astrocommunity.motion.nvim-surround" }, -- add/change/delete surrounding quotes/brackets
-  { import = "astrocommunity.recipes.heirline-vscode-winbar" }, -- breadcrumbs bar
   { import = "astrocommunity.diagnostics.trouble-nvim" }, -- "Problems" panel
   { import = "astrocommunity.search.grug-far-nvim" }, -- project-wide search & replace
   { import = "astrocommunity.scrolling.satellite-nvim" }, -- scrollbar with git/diagnostic marks

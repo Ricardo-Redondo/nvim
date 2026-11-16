@@ -35,6 +35,16 @@ end
 
 ---@type LazySpec
 return {
+  -- Keep only the buffer tabs and the sign/number column: no status bar at the bottom
+  -- and no breadcrumbs bar at the top
+  {
+    "rebelot/heirline.nvim",
+    opts = function(_, opts)
+      opts.statusline = nil
+      opts.winbar = nil
+    end,
+  },
+
   -- Oil: edit the filesystem like a buffer (open with `-` or <Leader>O)
   {
     "stevearc/oil.nvim",
@@ -105,8 +115,9 @@ return {
     opts = {
       keymap = {
         -- Tab accepts the highlighted suggestion (like VSCode); Up/Down or C-j/C-k to pick another
-        ["<Tab>"] = { "select_and_accept", "snippet_forward", "fallback" },
-        ["<S-Tab>"] = { "snippet_backward", "fallback" },
+        -- No snippet_forward/backward: they made Tab jump to old snippet placeholders
+        ["<Tab>"] = { "select_and_accept", "fallback" },
+        ["<S-Tab>"] = { "fallback" },
       },
       completion = {
         -- no automatic suggestions inside plain strings (<C-Space> still opens them manually)
@@ -135,6 +146,15 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
+      notifier = {
+        -- only pop up plugin manager messages (lazy, mason: updates, install errors). Everything
+        -- else stays out of the way but is still listed in the history (<Leader>fn)
+        filter = function(notif)
+          local title = notif.title or ""
+          if title:find "^lazy%.nvim" or title:find "^mason" or title:find "^Command Failed" then return true end
+          return vim.bo.filetype == "lazy" or vim.bo.filetype == "mason"
+        end,
+      },
       picker = {
         sources = {
           files = { filter = { transform = search_typed_path } },

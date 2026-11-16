@@ -35,8 +35,12 @@ return {
         require("astrocore").list_insert_unique(opts.ensure_installed, { "ty", "flake8", "mypy", "black", "isort" })
       -- the python pack installs these, but they're turned off (ty is used), and they take 336MB.
       -- `:MasonInstall basedpyright` to go back to it
-      local unused = { basedpyright = true, pyrefly = true }
-      opts.ensure_installed = vim.tbl_filter(function(tool) return not unused[tool] end, opts.ensure_installed)
+      local skip = { basedpyright = true, pyrefly = true }
+      -- tools one machine can't install, set in a local file (see README)
+      for _, tool in ipairs(vim.g.mason_skip or {}) do
+        skip[tool] = true
+      end
+      opts.ensure_installed = vim.tbl_filter(function(tool) return not skip[tool] end, opts.ensure_installed)
     end,
   },
 

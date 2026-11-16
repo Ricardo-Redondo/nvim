@@ -50,6 +50,22 @@ return {
     -- client specific configuration can also go in `lsp/` in your configuration root (see `:h lsp-config`)
     config = {
       -- ["*"] = { capabilities = {} }, -- modify default LSP client settings such as capabilities
+      ["*"] = {
+        handlers = {
+          -- drop "unused" noise: clangd's unused #include warnings and the faded hints for
+          -- unused names (lua_ls "unused local" etc). Real warnings and errors stay
+          ["textDocument/publishDiagnostics"] = function(err, result, ctx)
+            if result and result.diagnostics then
+              result.diagnostics = vim.tbl_filter(function(d)
+                if d.code == "unused-includes" then return false end
+                local unnecessary = vim.tbl_contains(d.tags or {}, vim.lsp.protocol.DiagnosticTag.Unnecessary)
+                return not (unnecessary and d.severity == vim.lsp.protocol.DiagnosticSeverity.Hint)
+              end, result.diagnostics)
+            end
+            return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx)
+          end,
+        },
+      },
       -- mypy and flake8 report errors (<Leader>uP), ty only does completion and navigation
       ty = {
         -- ty only finds `.venv` in the project root, this also covers one further up the repo

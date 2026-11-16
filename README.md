@@ -287,6 +287,16 @@ They're all optional, and most of the 1.6 GB download comes from them, so remove
 
 3. Restart `nvim`. Its plugins and tools install themselves.
 
+## Settings for one machine
+
+Files in `lua/plugins/` that aren't in the repo only affect the machine they're on, as `git pull`
+and the install script leave them alone. For example, to stop Mason installing a tool that
+fails on one machine, such as flake8 with Python older than 3.11:
+
+```sh
+echo 'vim.g.mason_skip = { "flake8" }; return {}' > ~/.config/nvim/lua/plugins/local.lua
+```
+
 ## Layout
 
 | File | Purpose |
