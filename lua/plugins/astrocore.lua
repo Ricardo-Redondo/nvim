@@ -96,13 +96,10 @@ return {
           desc = "Compile & run file",
         },
 
-        -- git (Neogit instead of the lazygit terminals AstroNvim adds)
-        ["<Leader>gg"] = false,
-        ["<Leader>tl"] = false,
+        -- git: lazygit is AstroNvim's <Leader>gg (floating terminal)
         ["<Leader>gd"] = { "<Cmd>DiffviewOpen<CR>", desc = "Diff view (working tree)" },
         ["<Leader>gD"] = { "<Cmd>DiffviewClose<CR>", desc = "Close diff view" },
         ["<Leader>gH"] = { "<Cmd>DiffviewFileHistory %<CR>", desc = "File history" },
-        ["<Leader>gn"] = { "<Cmd>Neogit<CR>", desc = "Neogit" },
         ["<Leader>gB"] = {
           function() require("gitsigns").toggle_current_line_blame() end,
           desc = "Toggle inline git blame",

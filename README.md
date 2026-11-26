@@ -138,7 +138,7 @@ In the file finder, type a path to search outside the project: `~/notes/todo` lo
 
 | Key | Action |
 | --- | --- |
-| `<Space>gn` | Neogit: stage and commit, like VSCode's Source Control |
+| `<Space>gg` | lazygit: stage, commit, push, branches, like VSCode's Source Control |
 | `<Space>gd` / `<Space>gD` | Open / close the Diffview diff |
 | `<Space>gH` | History of the current file |
 | `<Space>gB` | Toggle inline blame |

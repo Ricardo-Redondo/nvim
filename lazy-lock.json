@@ -54,7 +54,6 @@
   "oil.nvim": { "branch": "master", "commit": "d3733d933833a0e59b813ecec99341527adf0c28" },
   "package-info.nvim": { "branch": "master", "commit": "b86cf49efc3855dd94afb33304b278f6f122bf1a" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
-  "rainbow-delimiters.nvim": { "branch": "master", "commit": "65734f76783705255d9ede8a6e4692e1572801a5" },
   "resession.nvim": { "branch": "master", "commit": "cc819b0489938d03e4f3532a583354f0287c015b" },
   "satellite.nvim": { "branch": "main", "commit": "87843c9c8f28b54332497302de380a6d94c9e82b" },
   "schemastore.nvim": { "branch": "main", "commit": "246ca2fa1323ee1312b84352ab09b8c2fa292888" },

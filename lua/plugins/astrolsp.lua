@@ -45,6 +45,7 @@ return {
     -- enable servers that you already have installed without mason
     servers = {
       -- "pyright"
+      "rust_analyzer", -- installed with `rustup component add rust-analyzer rust-src`
     },
     -- customize language server configuration passed to `vim.lsp.config`
     -- client specific configuration can also go in `lsp/` in your configuration root (see `:h lsp-config`)
@@ -65,6 +66,10 @@ return {
             return vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx)
           end,
         },
+      },
+      -- run clippy instead of plain `cargo check` on save, so the editor shows clippy warnings too
+      rust_analyzer = {
+        settings = { ["rust-analyzer"] = { check = { command = "clippy" } } },
       },
       -- mypy and flake8 report errors (<Leader>uP), ty only does completion and navigation
       ty = {

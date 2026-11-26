@@ -22,6 +22,8 @@ return {
         "gitcommit",
         "gitignore",
         "diff",
+        "rust",
+        "toml",
         -- add more arguments for adding more treesitter parsers
       },
     },

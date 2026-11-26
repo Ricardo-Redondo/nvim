@@ -28,7 +28,6 @@ return {
 
   -- == Git ==
   { import = "astrocommunity.git.diffview-nvim" }, -- VSCode-style diff / file history view
-  { import = "astrocommunity.git.neogit" }, -- Magit-like git UI (stage, commit, push...)
 
   -- == VSCode-like editing ==
   { import = "astrocommunity.editing-support.vim-visual-multi" }, -- multi-cursor (<C-n> like Ctrl+D)
