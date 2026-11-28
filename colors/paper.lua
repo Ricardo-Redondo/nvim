@@ -54,8 +54,12 @@ local c = palettes[vim.o.background] or palettes.light
 
 local hl = function(group, spec) vim.api.nvim_set_hl(0, group, spec) end
 
+-- dark mode has no background of its own, so kitty's transparent, blurred one shows
+-- through; light mode stays solid white (text would be hard to read on the blur)
+local transparent = vim.o.background == "dark"
+
 -- editor
-hl("Normal", { fg = c.fg, bg = c.bg })
+hl("Normal", { fg = c.fg, bg = not transparent and c.bg or nil })
 hl("NormalNC", { link = "Normal" })
 hl("LineNr", { fg = c.linenr })
 hl("CursorLineNr", { fg = c.fg, bold = true })
